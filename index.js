@@ -12,6 +12,7 @@ const Artist = require('./artist/model');
 
 //DB - ROUTERS
 const authRouter = require('./auth/router');
+const userRouter = require('./user/router');
 
 //initialize & define port
 const app = express();
@@ -25,6 +26,8 @@ const jsonParser = bodyParser.json();
 app.use(cors());
 app.use(jsonParser);
 app.use(authRouter);
+app.use(userRouter);
+
 
 
 //add onListen function that logs the current port
