@@ -2,6 +2,8 @@ const Sequelize = require('sequelize');
 //const User = require('../user/model');
 const db = require('../db');
 
+//where to define painting that is being played?
+
 const Game = db.define(
     'game',
     {
