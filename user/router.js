@@ -10,7 +10,7 @@ router.post('/sign-up', (req, res, next) => {
         username: req.body.username,
         password: req.body.password,
         password_confirmation: req.body.password_confirmation,
-        gameId: 0
+        gameId: null
     }
     if (user.username && user.password && user.password_confirmation) {
         user.password = bcrypt.hashSync(req.body.password, 10)
