@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
-//const User = require('../user/model');
 const db = require('../db');
+const Painting = require('../painting/model');
 
 //where to define painting that is being played?
 
@@ -23,6 +23,6 @@ const Game = db.define(
     }
 )
 
-//Game.hasMany(User);
+Game.hasOne(Painting)
 
 module.exports = Game;

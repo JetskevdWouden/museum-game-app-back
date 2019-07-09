@@ -20,5 +20,6 @@ const User = db.define(
 )
 
 User.belongsTo(Game);
+Game.hasMany(User);
 
 module.exports = User;
