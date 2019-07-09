@@ -1,50 +1,69 @@
 const { Router } = require('express');
 const Sse = require('json-sse');
 const Score = require('./model');
+//const User = require('../user/model');
+//const Game = require('../game/model');
 
 const router = new Router();
 
-Score
-    .findAll() //where users (userId in scores table) in the same game(gameId in users table)
-    .then(scores => {
-        const json = JSON.stringify(scores) //need to stringify INTEGERS?
-        const stream = new Sse(json)
-        console.log("JSON INTO STREAM", json)
+//Logged in --> user = req.user.id
+//Game being played by user --> req.user.gameid
 
-        router.get('/stream', (req, res) => {
-            stream.init(req, res)   //sends response back
+router.get('/gamefield', (req, res, next) => {
+    const user_id = req.user.user
+    //const user_name = req.user.username
+    const game_id = req.user.gameId
+    //get the "new" game with players
+    Score
+        .findAll({
+            where: {
+                userId: user_id,
+                gameId: game_id
+            }
         })
+        .then(entities => {
+            console.loge('entities, an array of objects?', entities)
+            const json = JSON.stringify(entities)
+            const stream = new Sse(json)
 
-        router.post('/score', (req, res, next) => {
-            console.log("REQ BODY", req.body)
-            const score = req.body.score
-            //also get userId to which score belongsto
+            router.get('/stream', (req, res) => {
+                stream.init(req, res)
+            })
 
-            Score
-                .create(score)
-                .then(score => {
-                    Score
-                        .findAll()  //where users (userId in scores table) in the same game(gameId in users table)
-                        .then(scores => {
-                            const json = JSON.stringify(scores) //need to stringify INTEGERS?
-                            stream.updateInit(json)
-                            stream.send(json)
-                            return (
-                                res
-                                    .status(201)
-                                    .send({
-                                        message: "NEW UPDATED SCORES",
-                                        "new_score": score 
-                                    })
-                            )
+            router.put('/score', (req, res, next) => {
+                const newScore = req.body.score     //send score in body from store?
 
-                        })
-                        .catch(error => next(error))
-                })
-                .catch(error => next(error))
+                Score
+                    .update(
+                        {score: newScore},
+                        {where: {
+                            userId: user_id,
+                            gameId: game_id
+                        }}
+                    )
+                    .then(newScore => {
+                        Score
+                            .findAll({
+                                where: {
+                                    userId: user_id,
+                                    gameId: game_id
+                                }
+                            })
+                            .then(scores => {
+                                const json = JSON.stringify(scores)
+                                stream.updateInit(json)
+                                stream.send({
+                                    message: "SCORE HAS BEEN UPDATED",
+                                    "new_score": newScore
+                                })
+                            })
+                            .catch(error => next(error))
+                    })
+                    .catch(error => next(error))
+            })
         })
-    })
-    .catch(console.error)
+        .catch(error => next(error))
+})
 
 module.exports = router;
 
