@@ -15,7 +15,7 @@ router.post('/login', (req, res, next) => {
         User
             .findOne({
                 where: {
-                    user: username
+                    username: username
                 }
             })
             .then(entity => {

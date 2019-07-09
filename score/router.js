@@ -43,8 +43,8 @@ Score
                 })
                 .catch(error => next(error))
         })
-        .catch(console.error)
     })
+    .catch(console.error)
 
 module.exports = router;
 
