@@ -15,6 +15,7 @@ const Score = require('./score/model');
 const authRouter = require('./auth/router');
 const userRouter = require('./user/router');
 const scoreRouter = require('./score/router');
+const paintingRouter = require('./painting/router');
 
 //initialize & define port
 const app = express();
@@ -30,6 +31,7 @@ app.use(jsonParser);
 app.use(authRouter);
 app.use(userRouter);
 app.use(scoreRouter);
+app.use(paintingRouter);
 
 //add onListen function that logs the current port
 function onListen() {
