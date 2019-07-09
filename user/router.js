@@ -5,7 +5,7 @@ const User = require('../user/model');
 const router = new Router();
 
 //NEW USER --> SIGN UP at "/users" --> can't at "/" because already has a POST route for login
-router.post('/users', (req, res, next) => {
+router.post('/sign-up', (req, res, next) => {
     const user = {
         username: req.body.username,
         password: req.body.password,

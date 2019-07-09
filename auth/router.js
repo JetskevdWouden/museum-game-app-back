@@ -7,7 +7,7 @@ const router = new Router();
 
 //LOGIN AUTHENTICATION AT "/"
 
-router.post('/', (req, res, next) => {
+router.post('/login', (req, res, next) => {
     const username = req.body.username
     const password = req.body.password
 
