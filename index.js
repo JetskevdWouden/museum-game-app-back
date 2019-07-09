@@ -9,10 +9,12 @@ const User = require('./user/model');
 const Painting = require('./painting/model');
 const Game = require('./game/model');
 const Artist = require('./artist/model');
+const Score = require('./score/model');
 
 //DB - ROUTERS
 const authRouter = require('./auth/router');
 const userRouter = require('./user/router');
+const scoreRouter = require('./score/router');
 
 //initialize & define port
 const app = express();
@@ -27,6 +29,7 @@ app.use(cors());
 app.use(jsonParser);
 app.use(authRouter);
 app.use(userRouter);
+app.use(scoreRouter);
 
 //add onListen function that logs the current port
 function onListen() {
