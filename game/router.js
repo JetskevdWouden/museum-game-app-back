@@ -12,8 +12,8 @@ const router = new Router();
 //user creates new game
 router.post('/new-game', (req, res, next) => {
     const game = {
-        game_open: true,
-        game_active: true
+        open: true,
+        active: true
     }
     Game
         .create(game)
