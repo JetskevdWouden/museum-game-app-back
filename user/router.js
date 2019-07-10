@@ -48,21 +48,18 @@ router.post('/sign-up', (req, res, next) => {
 //user's gameId is updated
 router.put('/join-game', (req, res, next) => {
     const user_id = req.user.id
-    const user_name= req.user.username
+    //const user_id = req.body.userId
     const game_id = req.body.gameId         //send in body what gameId user wants to join
-    
+
     User
-        .update(
-            {gameId: game_id},
-            {where: {
-                userId: user_id
-            }}
-        )
+        .findByPk(user_id)
         .then(user => {
+            user
+                .update({ gameId: game_id })
             res
                 .status(200)        //correct status code for update
                 .send({
-                    message: `THIS USER WITH USERNAME ${user_name} HAS BEEN ADDED TO GAME WITH ID ${game_id}`,
+                    message: `THIS USER WITH USERNAME ${user.username} HAS BEEN ADDED TO GAME WITH ID ${game_id}`,
                     "username": user.username,
                     "game_id": user.gameId
                 })
