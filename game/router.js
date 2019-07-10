@@ -1,4 +1,4 @@
-const {Router} = require('express');
+const { Router } = require('express');
 //const Sse = require('json-sse');
 const Game = require('./model');
 const User = require('../user/model');
@@ -54,10 +54,11 @@ router.put('/closed-game', (req, res, next) => {
     const gameId = req.body.gameId      //send game id to close in body
     Game
         .findByPk(gameId)
-        .update({
-            open: false
-        })
         .then(game => {
+            game
+                .update({
+                    open: false
+                })
             res
                 .status(200)            //corrent HTTP code?
                 .send({
@@ -73,17 +74,18 @@ router.put('/finished-game', (req, res, next) => {
     const gameId = req.body.gameId      //send game id to deactivate in body
     Game
         .findByPk(gameId)
-        .update({
-            active: false
-        })
         .then(game => {
+            game
+                .update({
+                    active: false
+                })
             res
                 .status(200)            //corrent HTTP code?
                 .send({
                     message: `GAME WITH ID ${gameId} HAS BEEN DEACTIVATED`,
                     game: game
                 })
-        })  
+        })
         .catch(error => next(error))
 })
 
