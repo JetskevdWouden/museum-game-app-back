@@ -25,8 +25,8 @@ router.get('/stream/:gameId', (req, res) => {
 })
 
 router.put('/score/:gameId', (req, res, next) => {
-    const { score } = req.body //send score in body --> from store?
-    const { userId } = req.body
+    const { score } = req.body                  //send score in body --> from store?
+    const { userId } = req.body                 //change -> get userId from header
     const { gameId } = req.params
     Score
         .update(
