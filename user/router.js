@@ -46,6 +46,7 @@ router.post('/sign-up', (req, res, next) => {
 
 //user joins an open game
 //user's gameId is updated
+
 router.put('/join-game', (req, res, next) => {
     const user_id = req.user.id
     //const user_id = req.body.userId
@@ -68,3 +69,8 @@ router.put('/join-game', (req, res, next) => {
 })
 
 module.exports = router;
+
+//NOTES
+//to add check if username already exists
+//add logic here to check if game is full? in join game?
+//add to check if game is open: true && active: true
