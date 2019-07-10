@@ -48,8 +48,8 @@ router.post('/sign-up', (req, res, next) => {
 //user's gameId is updated
 
 router.put('/join-game', (req, res, next) => {
-    const user_id = req.user.id
-    //const user_id = req.body.userId
+    //const user_id = req.user.id
+    const user_id = req.body.userId
     const game_id = req.body.gameId         //send in body what gameId user wants to join
 
     User

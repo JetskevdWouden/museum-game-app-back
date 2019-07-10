@@ -1,7 +1,6 @@
 const { Router } = require('express');
-//const Sse = require('json-sse');
 const Game = require('./model');
-//const User = require('../user/model');
+const User = require('../user/model');
 //const Painting = require('../painting/model');
 //const Sequelize = require('sequelize');
 //const auth = require('../auth/middleware)
@@ -87,5 +86,57 @@ router.put('/finished-game', (req, res, next) => {
         })
         .catch(error => next(error))
 })
+
+
+// -----------
+
+//get --> all users in /:gameId
+//check if game is open && active
+router.get('/game/:id', (req, res, next) => {
+    const game_id = req.params.id
+    Game
+        .findByPk(game_id)
+        .then(game => {
+            if (!game) {
+                res
+                    .status(404)
+                    .send({
+                        message: `GAME WITH ID ${game_id} DOES NOT EXIST`
+                    })
+                //is game closed here already?
+                //game has to be active
+            } else if (!game.active) {
+                res
+                    .status(404) //correct http code?
+                    .send({
+                        message: `GAME WITH ID ${game_id} IS NO LONGER ACTIVE`
+                    })
+            } else {
+                User
+                    .findAll({
+                        where: {
+                            gameId: game_id
+                        }
+                    })
+                    .then(entities => {
+                        //also need userId?
+                        const username = entities.map(entity => {
+                                return entity.username
+                        })
+                        res
+                            .status(200)
+                            .send({
+                                message: `USERS WITH GAME ID ${game_id}`,
+                                users: username
+                            })
+                    })
+                    .catch(error => next(error))
+            }
+        })
+        .catch(error => next(error))
+})
+
+
+
 
 module.exports = router;

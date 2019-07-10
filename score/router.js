@@ -21,6 +21,8 @@ router.get('/stream/:gameId', (req, res) => {
             const json = JSON.stringify(entities)
             stream.updateInit(json)
             stream.init(req, res)
+
+            return res.send(entities)
         })
 })
 
