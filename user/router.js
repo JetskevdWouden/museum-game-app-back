@@ -1,6 +1,8 @@
 const { Router } = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../user/model');
+//const auth = require('../auth/middleware)
+
 
 const router = new Router();
 
@@ -10,7 +12,6 @@ router.post('/sign-up', (req, res, next) => {
         username: req.body.username,
         password: req.body.password,
         password_confirmation: req.body.password_confirmation,
-        gameId: null
     }
     if (user.username && user.password && user.password_confirmation) {
         user.password = bcrypt.hashSync(req.body.password, 10)
@@ -41,6 +42,32 @@ router.post('/sign-up', (req, res, next) => {
                 message: "PLEASE FILL IN ALL REQUIRED FIELDS"
             })
     }
+})
+
+//user joins an open game
+//user's gameId is updated
+router.put('/join-game', (req, res, next) => {
+    const user_id = req.user.id
+    const user_name= req.user.username
+    const game_id = req.body.gameId         //send in body what gameId user wants to join
+    
+    User
+        .update(
+            {gameId: game_id},
+            {where: {
+                userId: user_id
+            }}
+        )
+        .then(user => {
+            res
+                .status(200)        //correct status code for update
+                .send({
+                    message: `THIS USER WITH USERNAME ${user_name} HAS BEEN ADDED TO GAME WITH ID ${game_id}`,
+                    "username": user.username,
+                    "game_id": user.gameId
+                })
+        })
+        .catch(error => next(error))
 })
 
 module.exports = router;

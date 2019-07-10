@@ -8,7 +8,6 @@ const db = require('./db');
 const User = require('./user/model');
 const Painting = require('./painting/model');
 const Game = require('./game/model');
-const Artist = require('./artist/model');
 const Score = require('./score/model');
 
 //DB - ROUTERS

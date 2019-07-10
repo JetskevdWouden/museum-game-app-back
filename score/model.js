@@ -15,9 +15,6 @@ const Score = db.define(
     }
 )
 
-//has a userId
-//has a gameId
-
 Score.belongsTo(User);
 Score.belongsTo(Game);
 

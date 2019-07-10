@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize');
 const db = require('../db');
 //const Game?
-const Artist = require('../artist/model');
 
 const Painting = db.define(
     'painting',
@@ -9,6 +8,10 @@ const Painting = db.define(
         title: {
             type: Sequelize.STRING,
             field: "title"
+        },
+        artist: {
+            type: Sequelize.STRING,
+            field: "artist"
         },
         image: {
             type: Sequelize.STRING,
@@ -19,7 +22,5 @@ const Painting = db.define(
         tableName: 'paintings'
     }
 )
-
-Painting.belongsTo(Artist);
 
 module.exports = Painting;

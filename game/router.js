@@ -1,52 +1,88 @@
 const {Router} = require('express');
 //const Sse = require('json-sse');
-//const Game = require('./model');
+const Game = require('./model');
 const User = require('../user/model');
-const Painting = require('../painting/model');
-const Sequelize = require('sequelize');
+//const Painting = require('../painting/model');
+//const Sequelize = require('sequelize');
+//const auth = require('../auth/middleware)
+
 
 const router = new Router();
 
-//user joins a game
-router.put('/game', (req, res, next) => {
-    const user_id = req.user.id
-    const user_name= req.user.username
-    const game_id = req.body.gameId         //send in body what gameId user wants to join
-    
-    User
-        .update(
-            {gameId: game_id},
-            {where: {
-                userId: user_id
-            }}
-        )
-        .then(user => {
+//user creates new game
+router.post('/new-game', (req, res, next) => {
+    Game
+        .create({
+            open: true,
+            active: true
+        })
+        .then(game => {
             res
-                .status(200)        //correct status code for update
+                .status(201)
                 .send({
-                    message: `THIS USER WITH USERNAME ${user_name} HAS BEEN ADDED TO GAME WITH ID ${game_id}`,
-                    "username": user.username,
-                    "game_id": user.gameId
+                    message: "A NEW GAME WAS CREATED",
+                    gameId: game.id,
+                    game: game
                 })
         })
         .catch(error => next(error))
 })
 
-//get 5 random paintings for a game
-router.get('/game', (req, res, next) => {
-    Painting
-        .findAll(
-            {order: Sequelize.literal('random()'), limit: 5}
-        )
-        .then(paintings => {
-            console.log("IS THIS AN ARRAY OF PAINTING OBJECTS?", paintings)
+//get all open games
+router.get('/open-games', (req, res, next) => {
+    Game
+        .findAll({
+            where: {
+                open: true,
+                active: true
+            }
+        })
+        .then(games => {
             res
                 .status(200)
                 .send({
-                    message: "5 RANDOM PAINTINGS FROM DATABASE",
-                    paintings: paintings
+                    message: "ALL CURRENT OPEN TO JOIN GAMES",
+                    games: games
                 })
         })
+        .catch(error => next(error))
+})
+
+//put --> update open game to closed game
+router.put('/closed-game', (req, res, next) => {
+    const gameId = req.body.gameId      //send game id to close in body
+    Game
+        .findByPk(gameId)
+        .update({
+            open: false
+        })
+        .then(game => {
+            res
+                .status(200)            //corrent HTTP code?
+                .send({
+                    message: `GAME WITH ID ${gameId} HAS BEEN CLOSED`,
+                    game: game
+                })
+        })
+        .catch(error => next(error))
+})
+
+//put --> update active game to finished game
+router.put('/finished-game', (req, res, next) => {
+    const gameId = req.body.gameId      //send game id to deactivate in body
+    Game
+        .findByPk(gameId)
+        .update({
+            active: false
+        })
+        .then(game => {
+            res
+                .status(200)            //corrent HTTP code?
+                .send({
+                    message: `GAME WITH ID ${gameId} HAS BEEN DEACTIVATED`,
+                    game: game
+                })
+        })  
         .catch(error => next(error))
 })
 

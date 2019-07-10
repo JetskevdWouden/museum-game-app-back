@@ -1,19 +1,16 @@
 const Sequelize = require('sequelize');
 const db = require('../db');
-const Painting = require('../painting/model');
-
-//where to define painting that is being played?
 
 const Game = db.define(
     'game',
     {
-        //add content here?
-        coveredBlocks: {
-            type: Sequelize.INTEGER,
-            field: 'covered_blocks'
+        //status: can users join true or false
+        open: {
+            type: Sequelize.BOOLEAN,
+            field: 'game_open'
         },
-        //status: games active? OR game finished? OR game started?
-        status: {           
+        //status: is game finished true or false
+        active: {           
             type: Sequelize.BOOLEAN,
             field: 'game_active'
         }
@@ -22,7 +19,5 @@ const Game = db.define(
         tableName: 'games'
     }
 )
-
-Game.hasOne(Painting)
 
 module.exports = Game;
