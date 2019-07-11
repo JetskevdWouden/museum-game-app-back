@@ -68,6 +68,34 @@ router.put('/join-game', (req, res, next) => {
         .catch(error => next(error))
 })
 
+//get --> users per game id
+router.get('/game/:id/users', (req, res, next) => {
+    const gameId = req.params.id
+    User
+        .findAll({
+            where: {
+                gameId: gameId
+            }
+        })
+        .then(users => {
+            const players = users.map(player => {
+                const playerId = player.id
+                const playerUsername = player.username
+                return {
+                    userId: playerId,
+                    username: playerUsername
+                }
+            })
+            res
+                .status(200)
+                .send({
+                    message: `USERS IN GAME WITH ID ${gameId}`,
+                    players: players
+                })
+        })
+        .catch(error => next(error))
+})
+
 module.exports = router;
 
 //NOTES

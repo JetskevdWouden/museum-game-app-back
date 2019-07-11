@@ -47,6 +47,36 @@ router.get('/open-games', (req, res, next) => {
         .catch(error => next(error))
 })
 
+//get ---> game by ID
+router.get('/game/:id', (req, res, next) => {
+    const gameId = req.params.id
+    Game
+        .findByPk(gameId)
+        .then(game => {
+            if (!game) {
+                res
+                    .status(404)
+                    .send({
+                        message: `GAME WITH ID ${gameId} DOES NOT EXIST`
+                    })
+            } else if (game.active === false) {
+                res
+                    .status(404)
+                    .send({
+                        message: `GAME WITH ID ${gameId} IS FINISHED/CLOSED`
+                    })
+            } else {
+                res
+                    .status(200)
+                    .send({
+                        message: `GAME WITH ID ${gameId}`,
+                        game: game
+                    })
+            }
+        })
+        .catch(error => next(error))
+})
+
 //put --> update open game to closed game
 router.put('/closed-game', (req, res, next) => {
     const gameId = req.body.gameId      //send game id to close in body
