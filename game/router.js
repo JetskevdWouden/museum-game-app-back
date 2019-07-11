@@ -122,6 +122,7 @@ router.put('/finished-game', (req, res, next) => {
 
 //get --> all users in /:gameId
 //check if game is open && active
+//!!!! IS THIS DOUBLE? check user router
 router.get('/game/:id', (req, res, next) => {
     const game_id = req.params.id
     Game
@@ -165,8 +166,5 @@ router.get('/game/:id', (req, res, next) => {
         })
         .catch(error => next(error))
 })
-
-
-
 
 module.exports = router;
