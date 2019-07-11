@@ -96,6 +96,46 @@ router.get('/game/:id/users', (req, res, next) => {
         .catch(error => next(error))
 })
 
+//get --> user by id
+router.get('/users/:id', (req, res, next) => {
+    //const userId = req.body.userId
+    const userId = req.params.id
+
+    User
+        .findByPk(userId)
+        .then(user => {
+            if (!user) {
+                res
+                    .status(404)
+                    .send({
+                        message: `USER WITH ID ${userId} DOES NOT EXIST`
+                    })
+            } else {
+                res
+                    .status(200)
+                    .send({
+                        message: `USER WITH ID ${user.id}`,
+                        userId: user.id,
+                        username: user.username
+                    })
+            }
+        })
+        .catch(error => next(error))
+})
+
+// router.get('/users', (req, res, next) => {
+//     User
+//         .findAll()
+//         .then(users => {
+//             res
+//                 .status(200)
+//                 .send({
+//                     users: users
+//                 })
+//         })
+//         .catch(error => next(error))
+// })
+
 module.exports = router;
 
 //NOTES
