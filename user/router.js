@@ -1,31 +1,47 @@
 const { Router } = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../user/model');
-//const auth = require('../auth/middleware)
+const auth = require('../auth/middleware');
 
 
 const router = new Router();
 
 //NEW USER --> SIGN UP at "/users" --> can't at "/" because already has a POST route for login
 router.post('/sign-up', (req, res, next) => {
-    const user = {
+    const newUser = {
         username: req.body.username,
         password: req.body.password,
         password_confirmation: req.body.password_confirmation,
     }
-    if (user.username && user.password && user.password_confirmation) {
-        user.password = bcrypt.hashSync(req.body.password, 10)
-        if (bcrypt.compareSync(user.password_confirmation, user.password)) {
+    if (newUser.username && newUser.password && newUser.password_confirmation) {
+        newUser.password = bcrypt.hashSync(req.body.password, 10)
+        if (bcrypt.compareSync(newUser.password_confirmation, newUser.password)) {
             User
-                .create(user)
+                .findOne({
+                    where: {
+                        username: newUser.username
+                    }
+                })
                 .then(user => {
-                    res
-                        .status(201)
-                        .send({
-                            message: "A NEW USER WAS CREATED",
-                            username: user.username,
-                            user_id: user.id
-                        })
+                    if (!user) {
+                        User
+                            .create(newUser)
+                            .then(user => {
+                                res
+                                    .status(201)
+                                    .send({
+                                        message: "A NEW USER WAS CREATED",
+                                        username: user.username,
+                                        user_id: user.id
+                                    })
+                            })
+                    } else if (user.username === newUser.username){
+                        res
+                            .status(409) //conflict?
+                            .send({
+                                message: `USERNAME ${newUser.username} ALREADY EXISTS`
+                            })
+                    }
                 })
                 .catch(error => next(error))
         } else {
@@ -47,10 +63,11 @@ router.post('/sign-up', (req, res, next) => {
 //user joins an open game
 //user's gameId is updated
 
-router.put('/join-game', (req, res, next) => {
-    //const user_id = req.user.id
-    const user_id = req.body.userId
+router.put('/join-game', auth, (req, res, next) => {
+    const user_id = req.user.id
     const game_id = req.body.gameId         //send in body what gameId user wants to join
+    
+    //check if game with gamId open === true 
 
     User
         .findByPk(user_id)
@@ -69,7 +86,7 @@ router.put('/join-game', (req, res, next) => {
 })
 
 //get --> users per game id
-router.get('/game/:id/users', (req, res, next) => {
+router.get('/game/:id/users', auth, (req, res, next) => {
     const gameId = req.params.id
     User
         .findAll({
@@ -97,7 +114,7 @@ router.get('/game/:id/users', (req, res, next) => {
 })
 
 //get --> user by id
-router.get('/users/:id', (req, res, next) => {
+router.get('/users/:id', auth, (req, res, next) => {
     //const userId = req.body.userId
     const userId = req.params.id
 
@@ -122,19 +139,6 @@ router.get('/users/:id', (req, res, next) => {
         })
         .catch(error => next(error))
 })
-
-// router.get('/users', (req, res, next) => {
-//     User
-//         .findAll()
-//         .then(users => {
-//             res
-//                 .status(200)
-//                 .send({
-//                     users: users
-//                 })
-//         })
-//         .catch(error => next(error))
-// })
 
 module.exports = router;
 
