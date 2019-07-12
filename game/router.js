@@ -1,8 +1,6 @@
 const { Router } = require('express');
 const Game = require('./model');
 const User = require('../user/model');
-//const Painting = require('../painting/model');
-//const Sequelize = require('sequelize');
 const auth = require('../auth/middleware');
 
 const router = new Router();

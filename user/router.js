@@ -2,6 +2,7 @@ const { Router } = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../user/model');
 const auth = require('../auth/middleware');
+const Game = require('../game/model');
 
 
 const router = new Router();
@@ -35,7 +36,7 @@ router.post('/sign-up', (req, res, next) => {
                                         user_id: user.id
                                     })
                             })
-                    } else if (user.username === newUser.username){
+                    } else if (user.username === newUser.username) {
                         res
                             .status(409) //conflict?
                             .send({
@@ -62,25 +63,45 @@ router.post('/sign-up', (req, res, next) => {
 
 //user joins an open game
 //user's gameId is updated
-
 router.put('/join-game', auth, (req, res, next) => {
     const user_id = req.user.id
     const game_id = req.body.gameId         //send in body what gameId user wants to join
-    
-    //check if game with gamId open === true 
 
-    User
-        .findByPk(user_id)
-        .then(user => {
-            user
-                .update({ gameId: game_id })
-            res
-                .status(200)        //correct status code for update
-                .send({
-                    message: `THIS USER WITH USERNAME ${user.username} HAS BEEN ADDED TO GAME WITH ID ${game_id}`,
-                    "username": user.username,
-                    "game_id": user.gameId
-                })
+    Game
+        .findOne({
+            where: {
+                id: game_id
+            }
+        })
+        .then(game => {
+            if (!game) {
+                res
+                    .status(404)
+                    .send({
+                        message: "THIS GAME DOES NOT EXIST"
+                    })
+            } else if (!game.open || !game.active) {
+                res
+                    .status(404)
+                    .send({
+                        message: `GAME WITH ID ${game_id} IS CLOSED OR FINISHED`
+                    })
+            } else {
+                User
+                    .findByPk(user_id)
+                    .then(user => {
+                        user
+                            .update({ gameId: game_id })
+                        res
+                            .status(200)
+                            .send({
+                                message: `THIS USER WITH USERNAME ${user.username} HAS BEEN ADDED TO GAME WITH ID ${game_id}`,
+                                "username": user.username,
+                                "game_id": user.gameId
+                            })
+                    })
+                    .catch(error => next(error))
+            }
         })
         .catch(error => next(error))
 })
