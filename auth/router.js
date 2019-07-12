@@ -31,7 +31,8 @@ router.post('/login', (req, res, next) => {
                             .status(200)
                             .send({
                                 message: "JWT",
-                                JWT: toJWT({ userId: entity.id })
+                                JWT: toJWT({ userId: entity.id }),
+                                userId: entity.id
                             })
                     } else {
                         res
