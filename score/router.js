@@ -26,8 +26,7 @@ router.get('/stream/:gameId', (req, res) => {
 })
 
 router.put('/score/:gameId', (req, res, next) => {
-    const { score } = req.body                  //send score in body --> from store?
-    const { userId } = req.body                 //change -> get userId from header?? user = req.user.id
+    const { score, userId } = req.body
     const { gameId } = req.params
     Score
         .update(
@@ -35,10 +34,12 @@ router.put('/score/:gameId', (req, res, next) => {
             { where: { userId, gameId } }
         )
         .then(newScore => {
+            console.log("newScore test:", newScore.dataValues)
             Score
                 .findAll({ where: { gameId } })
                 .then(entities => {
                     const json = JSON.stringify(entities)
+                    console.log("json test:", json)
                     stream.updateInit(json)
                     stream.send(json)
 
