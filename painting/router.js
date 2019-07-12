@@ -6,7 +6,6 @@ const Sequelize = require('sequelize');
 const router = new Router();
 
 //get all paintings
-//no auth yet
 router.get('/paintings', (req, res, next) => {
     Painting
         .findAll()

@@ -10,7 +10,7 @@ const router = new Router();
 router.post('/login', (req, res, next) => {
     const username = req.body.username
     const password = req.body.password
-
+    
     if (username && password) {
         User
             .findOne({

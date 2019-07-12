@@ -1,12 +1,11 @@
 const { Router } = require('express');
 const Sse = require('json-sse');
 const Score = require('./model');
-//const User = require('../user/model');
-//const Game = require('../game/model');
+
+
+//!! NECESSARY TO ADD AUTH TO STREAM?
 
 const router = new Router();
-
-//Logged in --> user = req.user.id
 
 const stream = new Sse()
 
@@ -28,7 +27,7 @@ router.get('/stream/:gameId', (req, res) => {
 
 router.put('/score/:gameId', (req, res, next) => {
     const { score } = req.body                  //send score in body --> from store?
-    const { userId } = req.body                 //change -> get userId from header
+    const { userId } = req.body                 //change -> get userId from header?? user = req.user.id
     const { gameId } = req.params
     Score
         .update(
