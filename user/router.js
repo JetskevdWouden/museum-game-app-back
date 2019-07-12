@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const User = require('../user/model');
 const auth = require('../auth/middleware');
 const Game = require('../game/model');
+const Score = require('../score/model');
 
 
 const router = new Router();
@@ -63,8 +64,10 @@ router.post('/sign-up', (req, res, next) => {
 
 //user joins an open game
 //user's gameId is updated
+
 router.put('/join-game', auth, (req, res, next) => {
     const user_id = req.user.id
+    //const user_id = req.body.userId
     const game_id = req.body.gameId         //send in body what gameId user wants to join
 
     Game
@@ -90,15 +93,27 @@ router.put('/join-game', auth, (req, res, next) => {
                 User
                     .findByPk(user_id)
                     .then(user => {
+                        Score
+                            .create({
+                                userId: user_id,
+                                gameId: game_id
+                            })
+                            .then(entity => {
+
+                            })
+                            .catch(error => next(error))
                         user
                             .update({ gameId: game_id })
-                        res
-                            .status(200)
-                            .send({
-                                message: `THIS USER WITH USERNAME ${user.username} HAS BEEN ADDED TO GAME WITH ID ${game_id}`,
-                                "username": user.username,
-                                "game_id": user.gameId
+                            .then(user => {
+                                res
+                                    .status(200)
+                                    .send({
+                                        message: `THIS USER WITH USERNAME ${user.username} HAS BEEN ADDED TO GAME WITH ID ${game_id}`,
+                                        "username": user.username,
+                                        "game_id": user.gameId
+                                    })
                             })
+                            .catch(error => nect(error))
                     })
                     .catch(error => next(error))
             }
