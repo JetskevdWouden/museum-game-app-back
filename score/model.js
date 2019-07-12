@@ -7,7 +7,8 @@ const Score = db.define(
     'score',
     {
         score: {
-            type: Sequelize.INTEGER
+            type: Sequelize.INTEGER,
+            defaultValue: 0
         }
     }, {
         timestamps: false,

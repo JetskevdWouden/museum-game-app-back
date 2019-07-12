@@ -19,15 +19,15 @@ router.get('/stream/:gameId', (req, res) => {
         .then(entities => {
             const json = JSON.stringify(entities)
             stream.updateInit(json)
-            stream.init(req, res)
-
-            return res.send(entities)
+            return stream.init(req, res)
         })
 })
 
 router.put('/score/:gameId', (req, res, next) => {
+    console.log('req.body test:', req.body)
     const { score, userId } = req.body
     const { gameId } = req.params
+
     Score
         .update(
             { score },

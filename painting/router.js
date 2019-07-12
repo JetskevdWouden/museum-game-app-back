@@ -35,7 +35,7 @@ router.get('/game-paintings', (req, res, next) => {
             {order: Sequelize.literal('random()'), limit: 5}
         )
         .then(paintings => {
-            console.log("IS THIS AN ARRAY OF PAINTING OBJECTS?", paintings)
+            console.log("how many painting objects?", paintings.length)
             res
                 .status(200)
                 .send({
