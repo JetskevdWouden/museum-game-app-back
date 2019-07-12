@@ -2,11 +2,13 @@ const { Router } = require('express');
 const Game = require('./model');
 const User = require('../user/model');
 const auth = require('../auth/middleware');
+const Score = require('../score/model');
 
 const router = new Router();
 
 //user creates new game
 //update user.gameId to new gameId
+//create 1 score entity
 router.post('/new-game', auth, (req, res, next) => {
     const userId = req.user.id
     const game = {
@@ -27,6 +29,17 @@ router.post('/new-game', auth, (req, res, next) => {
                     user
                         .update({
                             gameId: gameId
+                        })
+                    Score
+                        .create({
+                            userId: userId,
+                            gameId: user.gameId
+                        })
+                        .then(entity => {
+                            res
+                                .send({
+                                    message: "hello"
+                                })
                         })
                 })
                 .catch(error => next(error))
