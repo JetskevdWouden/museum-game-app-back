@@ -4,24 +4,24 @@
 
 ## :nerd_face: A multi-player game to tedst your art smarts :nerd_face:
 
-### :push_pin: Links
+### :pushpin: Links
 * The Front-End can be found [here](https://github.com/JetskevdWouden/museum-game-app-front)
 * This server is deployed [here](https://protected-eyrie-79199.herokuapp.com)
 
-### :push_pin: What is this?
+### :pushpin: What is this?
 
 
-### :push_pin: Table of contents
+### :pushpin: Table of contents
 
 * [Technologies used](#technologies_used)
 * [Setup](#setup)
 * [API](#api)
 
-### :push_pin: Technologies Used
+### :pushpin: Technologies Used
 
-### :push_pin: SetUp
+### :pushpin: SetUp
 
-### :push_pin: API
+### :pushpin: API
 
 
 * Models
