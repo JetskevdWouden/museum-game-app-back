@@ -2,7 +2,7 @@
 
 # **MUSEUM "GET THE PICTURE"**
 
-## :nerd_face: A multi-player game to tedst your art smarts :nerd_face:
+## :nerd_face: A multi-player game to test your art smarts :nerd_face:
 
 ### :pushpin: Links
 * The Front-End can be found [here](https://github.com/JetskevdWouden/museum-game-app-front)
