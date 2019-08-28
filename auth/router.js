@@ -5,18 +5,14 @@ const User = require('../user/model');
 
 const router = new Router();
 
-//LOGIN AUTHENTICATION AT "/"
-
 router.post('/login', (req, res, next) => {
-    const username = req.body.username
-    const password = req.body.password
-    
+    const { username } = req.body
+    const { password } = req.body
+
     if (username && password) {
         User
             .findOne({
-                where: {
-                    username: username
-                }
+                where: { username: username }
             })
             .then(entity => {
                 if (!entity) {
