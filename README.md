@@ -4,18 +4,19 @@
 
 ## :nerd_face: A multi-player game to test your art smarts :nerd_face:
 
+### :pushpin: What is this?
+This is the server side of the "Museum Get The Picture" multi-player game.
+
 ### :pushpin: Links
 * The Front-End can be found [HERE](https://github.com/JetskevdWouden/museum-game-app-front)
 * This server is deployed [HERE](https://protected-eyrie-79199.herokuapp.com)
-
-### :pushpin: What is this?
-
 
 ### :pushpin: Table of contents
 
 * [Technologies used](#technologies_used)
 * [Setup](#setup)
 * [API](#api)
+* [Future Features](#future_features)
 
 ### :pushpin: Technologies Used
 
@@ -29,3 +30,4 @@
 
 * Endpoints
 
+### :pushpin: Future Features
