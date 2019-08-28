@@ -20,14 +20,32 @@ This is the server side of the "Museum Get The Picture" multi-player game.
 
 ### :pushpin: Technologies Used
 
+* Node.js
+* PostgreSQL
+* Express
+* Sequelize
+
 ### :pushpin: SetUp
 
+1. git clone
+2. npm install
+3. npm run dev
+
+Please note that in order to run the server locally you must also start a Postgres container using the following commands
+```bash
+$ docker run \
+  --rm \
+  -e POSTGRES_PASSWORD=secret \
+  -p 5432:5432 \
+  postgres
+```
+Connect to your database with:
+* Mac: Postico
+* Linux: DBeaver
+
 ### :pushpin: API
+**Models:**
 
-
-* Models
-
-
-* Endpoints
+**Endpoints:**
 
 ### :pushpin: Future Features
