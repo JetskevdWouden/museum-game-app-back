@@ -1,6 +1,5 @@
 const Sequelize = require('sequelize');
 const db = require('../db');
-//const Game?
 
 const Painting = db.define(
     'painting',

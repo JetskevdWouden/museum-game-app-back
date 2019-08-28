@@ -2,13 +2,12 @@ const { Router } = require('express');
 const Sse = require('json-sse');
 const Score = require('./model');
 
-
-//!! NECESSARY TO ADD AUTH TO STREAM?
-
 const router = new Router();
 
+//SSE Json - Server Sent Events
 const stream = new Sse()
 
+//GET - initiate stream per game id
 router.get('/stream/:gameId', (req, res) => {
     Score
         .findAll({
@@ -23,23 +22,30 @@ router.get('/stream/:gameId', (req, res) => {
         })
 })
 
+//PUT - update score per game id // response all new scores via stream
 router.put('/score/:gameId', (req, res, next) => {
-    console.log('req.body test:', req.body)
     const { score, userId } = req.body
     const { gameId } = req.params
 
     Score
         .update(
             { score },
-            { where: { userId, gameId } }
+            {
+                where: {
+                    userId,
+                    gameId
+                }
+            }
         )
         .then(newScore => {
-            console.log("newScore test:", newScore.dataValues)
             Score
-                .findAll({ where: { gameId } })
+                .findAll(
+                    {
+                        where: { gameId }
+                    }
+                )
                 .then(entities => {
                     const json = JSON.stringify(entities)
-                    console.log("json test:", json)
                     stream.updateInit(json)
                     stream.send(json)
 

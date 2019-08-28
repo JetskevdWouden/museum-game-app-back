@@ -65,13 +65,11 @@ router.post('/sign-up', (req, res, next) => {
 //PUT - update user's gameId per userId
 router.put('/join-game', auth, (req, res, next) => {
     const userId = req.user.id
-    const gameId = req.body.gameId
+    const { gameId } = req.body
 
     Game
         .findOne({
-            where: {
-                id: gameId
-            }
+            where: { id: gameId }
         })
         .then(game => {
             if (!game) {
@@ -92,15 +90,15 @@ router.put('/join-game', auth, (req, res, next) => {
                     .then(user => {
                         Score
                             .create({
-                                userId: userId,
-                                gameId: gameId
+                                userId,
+                                gameId
                             })
                             .then(entity => {
 
                             })
                             .catch(error => next(error))
                         user
-                            .update({ gameId: gameId })
+                            .update({ gameId })
                             .then(user => {
                                 res
                                     .status(200)
@@ -124,9 +122,7 @@ router.get('/game/:id/users', auth, (req, res, next) => {
 
     User
         .findAll({
-            where: {
-                gameId: gameId
-            }
+            where: { gameId }
         })
         .then(users => {
             const players = users.map(player => {

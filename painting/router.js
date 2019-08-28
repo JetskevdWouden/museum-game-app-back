@@ -1,16 +1,15 @@
-const {Router} = require('express');
+const { Router } = require('express');
 const Painting = require('./model');
 const Sequelize = require('sequelize');
-//const auth = require('../auth/middleware)
 
 const router = new Router();
 
-//get all paintings
+//GET - return all paintings
 router.get('/paintings', (req, res, next) => {
     Painting
         .findAll()
         .then(paintings => {
-            if(paintings.length === 0) {
+            if (paintings.length === 0) {
                 res
                     .status(200)
                     .send({
@@ -28,14 +27,13 @@ router.get('/paintings', (req, res, next) => {
         .catch(error => next(error))
 })
 
-//get 5 random paintings for a game
+//GET - return 5 random paintings
 router.get('/game-paintings', (req, res, next) => {
     Painting
         .findAll(
-            {order: Sequelize.literal('random()'), limit: 5}
+            { order: Sequelize.literal('random()'), limit: 5 }
         )
         .then(paintings => {
-            console.log("how many painting objects?", paintings.length)
             res
                 .status(200)
                 .send({
