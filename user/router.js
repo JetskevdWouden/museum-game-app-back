@@ -5,10 +5,9 @@ const auth = require('../auth/middleware');
 const Game = require('../game/model');
 const Score = require('../score/model');
 
-
 const router = new Router();
 
-//NEW USER --> SIGN UP at "/users" --> can't at "/" because already has a POST route for login
+//POST - create new user
 router.post('/sign-up', (req, res, next) => {
     const newUser = {
         username: req.body.username,
@@ -39,7 +38,7 @@ router.post('/sign-up', (req, res, next) => {
                             })
                     } else if (user.username === newUser.username) {
                         res
-                            .status(409) //conflict?
+                            .status(409)
                             .send({
                                 message: `USERNAME ${newUser.username} ALREADY EXISTS`
                             })
@@ -62,18 +61,16 @@ router.post('/sign-up', (req, res, next) => {
     }
 })
 
-//user joins an open game
-//user's gameId is updated
-
+//ENDPOINT NOT IN USE YET
+//PUT - update user's gameId per userId
 router.put('/join-game', auth, (req, res, next) => {
-    const user_id = req.user.id
-    //const user_id = req.body.userId
-    const game_id = req.body.gameId         //send in body what gameId user wants to join
+    const userId = req.user.id
+    const gameId = req.body.gameId
 
     Game
         .findOne({
             where: {
-                id: game_id
+                id: gameId
             }
         })
         .then(game => {
@@ -87,28 +84,28 @@ router.put('/join-game', auth, (req, res, next) => {
                 res
                     .status(404)
                     .send({
-                        message: `GAME WITH ID ${game_id} IS CLOSED OR FINISHED`
+                        message: `GAME WITH ID ${gameId} IS CLOSED OR FINISHED`
                     })
             } else {
                 User
-                    .findByPk(user_id)
+                    .findByPk(userId)
                     .then(user => {
                         Score
                             .create({
-                                userId: user_id,
-                                gameId: game_id
+                                userId: userId,
+                                gameId: gameId
                             })
                             .then(entity => {
 
                             })
                             .catch(error => next(error))
                         user
-                            .update({ gameId: game_id })
+                            .update({ gameId: gameId })
                             .then(user => {
                                 res
                                     .status(200)
                                     .send({
-                                        message: `THIS USER WITH USERNAME ${user.username} HAS BEEN ADDED TO GAME WITH ID ${game_id}`,
+                                        message: `THIS USER WITH USERNAME ${user.username} HAS BEEN ADDED TO GAME WITH ID ${gameId}`,
                                         "username": user.username,
                                         "game_id": user.gameId
                                     })
@@ -121,9 +118,10 @@ router.put('/join-game', auth, (req, res, next) => {
         .catch(error => next(error))
 })
 
-//get --> users per game id
+//GET - users per gameId
 router.get('/game/:id/users', auth, (req, res, next) => {
     const gameId = req.params.id
+
     User
         .findAll({
             where: {
@@ -149,9 +147,8 @@ router.get('/game/:id/users', auth, (req, res, next) => {
         .catch(error => next(error))
 })
 
-//get --> user by id
+//GET - user by id
 router.get('/users/:id', auth, (req, res, next) => {
-    //const userId = req.body.userId
     const userId = req.params.id
 
     User
@@ -177,8 +174,3 @@ router.get('/users/:id', auth, (req, res, next) => {
 })
 
 module.exports = router;
-
-//NOTES
-//to add check if username already exists
-//add logic here to check if game is full? in join game?
-//add to check if game is open: true && active: true
